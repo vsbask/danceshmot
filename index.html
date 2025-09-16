@@ -3,224 +3,523 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SecondHand Shop</title>
+    <title>Dance Shmot | Магазин танцевальной одежды</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #ffffff;
-            color: #222222;
+        :root {
+            --primary: #8A2BE2;    /* Фиолетовый - цвет танца */
+            --secondary: #FFD700;  /* Золотой - акценты */
+            --accent: #40E0D0;     /* Бирюзовый - свежесть */
+            --light: #F8F9FA;
+            --dark: #212529;
+            --success: #28a745;
+        }
+        
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
             padding: 20px;
-            text-align: center;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
         }
         
         .header {
-            background: #4CAF50;
-            color: white;
+            text-align: center;
+            margin-bottom: 30px;
             padding: 20px;
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .logo {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        
+        h1 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            opacity: 0.9;
             margin-bottom: 20px;
+        }
+        
+        .btn {
+            background: var(--secondary);
+            color: var(--dark);
+            border: none;
+            padding: 16px 24px;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
         
         .category-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
-            margin: 20px 0;
+            margin: 25px 0;
         }
         
         .category-card {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px 15px;
+            border-radius: 15px;
             text-align: center;
             cursor: pointer;
-            border: 2px solid #e9ecef;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .category-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.15);
         }
         
-        .category-card h3 {
-            margin: 10px 0 0 0;
-            font-size: 16px;
+        .category-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
         }
         
-        .btn {
-            background: #40a7e3;
+        .product-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .product-price {
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1.2em;
+            margin: 8px 0;
+        }
+        
+        .badge {
+            background: var(--success);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        
+        .filter-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 15px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .filter-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.2);
             color: white;
             border: none;
-            padding: 15px 25px;
-            border-radius: 10px;
-            font-size: 16px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
             cursor: pointer;
-            width: 100%;
-            margin: 10px 0;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
         }
         
-        .btn:hover {
-            background: #2b8ac6;
+        .filter-btn.active {
+            background: var(--secondary);
+            color: var(--dark);
+        }
+        
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .section-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin: 25px 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .back-btn {
-            background: #6c757d;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            cursor: pointer;
             margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
     </style>
 </head>
 <body>
-    <div id="app">
-        <!-- Здесь будет меняться контент -->
+    <div class="container">
+        <div id="app">
+            <!-- Контент будет генерироваться JavaScript -->
+        </div>
     </div>
 
     <script>
-        // ==================== НАСТРОЙКИ ====================
-        const tg = window.Telegram.WebApp;
-        let currentView = 'main';
-        
-        // Данные категорий
+        // ==================== ДАННЫЕ ====================
         const categories = [
-            { id: 'clothes', name: '👕 Одежда', icon: '👕' },
-            { id: 'shoes', name: '👟 Обувь', icon: '👟' },
-            { id: 'accessories', name: '🎒 Аксессуары', icon: '🎒' },
-            { id: 'books', name: '📚 Книги', icon: '📚' }
+            { id: 'clothes', name: '👕 Одежда', icon: '👕', color: '#FF6B6B' },
+            { id: 'shoes', name: '👟 Обувь', icon: '👟', color: '#4ECDC4' },
+            { id: 'accessories', name: '💎 Аксессуары', icon: '💎', color: '#FFE66D' },
+            { id: 'costumes', name: '💃 Костюмы', icon: '💃', color: '#9B59B6' }
         ];
+
+        const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+        const genders = ['👩 Женский', '👨 Мужской', '⚧ Унисекс'];
         
+        const sampleProducts = [
+            {
+                id: 1,
+                name: 'Блестящий топ для танцев',
+                price: 1200,
+                size: 'M',
+                gender: '👩 Женский',
+                category: 'clothes',
+                condition: 'Отличное',
+                image: 'https://placehold.co/300x400/8A2BE2/white?text=Топ+для+танцев'
+            },
+            {
+                id: 2,
+                name: 'Танцевальные туфли',
+                price: 2500,
+                size: '38',
+                gender: '👩 Женский', 
+                category: 'shoes',
+                condition: 'Хорошее',
+                image: 'https://placehold.co/300x400/4ECDC4/white?text=Танцевальные+туфли'
+            }
+        ];
+
         // ==================== ФУНКЦИИ ====================
         
-        // Показываем главный экран
         function showMainScreen() {
             const app = document.getElementById('app');
             app.innerHTML = `
                 <div class="header">
-                    <h1>🔄 SecondHand Shop</h1>
-                    <p>Найдите уникальные вещи по выгодным ценам!</p>
+                    <div class="logo">💃🕺</div>
+                    <h1>Dance Shmot</h1>
+                    <p class="subtitle">Магазин танцевальной одежды secondhand</p>
                 </div>
-                
+
+                <button class="btn" onclick="showCategorySelection()">
+                    🛍️ Начать покупки
+                </button>
+
+                <button class="btn btn-secondary" onclick="showSellForm()">
+                    📦 Продать вещь
+                </button>
+
+                <button class="btn btn-secondary" onclick="showHowItWorks()">
+                    ❓ Как это работает
+                </button>
+
+                <div style="margin-top: 30px; opacity: 0.8; text-align: center;">
+                    <p>🎯 Находите уникальные вещи для танцев</p>
+                    <p>💸 Продавайте ненужное с выгодой</p>
+                    <p>⭐ Сообщество танцоров</p>
+                </div>
+            `;
+        }
+
+        function showCategorySelection() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="header">
+                    <h1>🎯 Выберите категорию</h1>
+                    <p>Найдите именно то, что ищете</p>
+                </div>
+
                 <div class="category-grid">
                     ${categories.map(cat => `
-                        <div class="category-card" onclick="showCategory('${cat.id}')">
-                            <div style="font-size: 40px;">${cat.icon}</div>
+                        <div class="category-card" onclick="showFilters('${cat.id}')" 
+                             style="border-color: ${cat.color}">
+                            <div class="category-icon">${cat.icon}</div>
                             <h3>${cat.name}</h3>
                         </div>
                     `).join('')}
                 </div>
-                
-                <button class="btn" onclick="showDonateForm()">
-                    📦 Отдать вещи в магазин
-                </button>
-                
-                <button class="btn" onclick="tg.showAlert('Напишите нам в @secondhand_support')">
-                    ❓ Помощь и поддержка
+
+                <button class="back-btn" onclick="showMainScreen()">
+                    ← Назад
                 </button>
             `;
-            
-            currentView = 'main';
         }
-        
-        // Показываем категорию
-        function showCategory(categoryId) {
+
+        function showFilters(categoryId) {
             const category = categories.find(cat => cat.id === categoryId);
             
             const app = document.getElementById('app');
             app.innerHTML = `
-                <button class="btn back-btn" onclick="showMainScreen()">
-                    ← Назад
+                <button class="back-btn" onclick="showCategorySelection()">
+                    ← Назад к категориям
                 </button>
-                
-                <h2>${category.icon} ${category.name}</h2>
-                <p>Выберите товар из категории</p>
-                
-                <div style="background: #e9f7ff; padding: 20px; border-radius: 10px; margin: 20px 0;">
-                    <h3>Джинсовая куртка</h3>
-                    <p>Размер: M | Цвет: Синий</p>
-                    <p>Состояние: Отличное</p>
-                    <p><strong>1500 руб.</strong></p>
-                    <button class="btn" onclick="tg.showAlert('Товар добавлен в корзину!')">
-                        🛒 Добавить в корзину
-                    </button>
+
+                <div class="header">
+                    <h1>${category.icon} ${category.name}</h1>
+                    <p>Уточните параметры поиска</p>
                 </div>
-                
-                <div style="background: #fff0e6; padding: 20px; border-radius: 10px; margin: 20px 0;">
-                    <h3>Кожаная сумка</h3>
-                    <p>Размер: Универсальный | Цвет: Коричневый</p>
-                    <p>Состояние: Хорошее</p>
-                    <p><strong>2000 руб.</strong></p>
-                    <button class="btn" onclick="tg.showAlert('Товар добавлен в корзину!')">
-                        🛒 Добавить в корзину
-                    </button>
+
+                <div class="filter-section">
+                    <div class="filter-title">
+                        <span>📏 Размер</span>
+                    </div>
+                    <div class="filter-options">
+                        ${sizes.map(size => `
+                            <button class="filter-btn" onclick="selectSize('${size}')">${size}</button>
+                        `).join('')}
+                    </div>
                 </div>
+
+                <div class="filter-section">
+                    <div class="filter-title">
+                        <span>👥 Пол</span>
+                    </div>
+                    <div class="filter-options">
+                        ${genders.map(gender => `
+                            <button class="filter-btn" onclick="selectGender('${gender}')">${gender}</button>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <button class="btn" onclick="showProducts()">
+                    🔍 Показать результаты
+                </button>
             `;
-            
-            currentView = 'category';
         }
-        
-        // Форма для сдачи вещей
-        function showDonateForm() {
+
+        function showProducts() {
             const app = document.getElementById('app');
             app.innerHTML = `
-                <button class="btn back-btn" onclick="showMainScreen()">
-                    ← Назад
+                <button class="back-btn" onclick="showCategorySelection()">
+                    ← Назад к фильтрам
                 </button>
-                
-                <h2>📦 Сдать вещи</h2>
-                <p>Заполните форму для оценки ваших вещей</p>
-                
-                <div style="text-align: left; margin: 20px 0;">
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Что вы хотите сдать?</label>
-                        <input type="text" placeholder="Например: Джинсы, куртка, книги..." 
-                               style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box;">
+
+                <div class="header">
+                    <h1>🎁 Найденные вещи</h1>
+                    <p>${sampleProducts.length} товаров</p>
+                </div>
+
+                ${sampleProducts.map(product => `
+                    <div class="product-card">
+                        <img src="${product.image}" alt="${product.name}" class="product-image">
+                        <h3>${product.name}</h3>
+                        <div class="badge">${product.condition}</div>
+                        <p>Размер: ${product.size} | ${product.gender}</p>
+                        <div class="product-price">${product.price} руб.</div>
+                        <button class="btn" onclick="showProductDetail(${product.id})">
+                            🛒 Хочу купить
+                        </button>
                     </div>
+                `).join('')}
+            `;
+        }
+
+        function showProductDetail(productId) {
+            const product = sampleProducts.find(p => p.id === productId);
+            
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <button class="back-btn" onclick="showProducts()">
+                    ← Назад к товарам
+                </button>
+
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.name}" class="product-image">
+                    <h2>${product.name}</h2>
+                    <div class="badge">${product.condition}</div>
+                    <p>📏 Размер: ${product.size}</p>
+                    <p>👥 Пол: ${product.gender}</p>
+                    <p>🏷️ Категория: ${product.category}</p>
+                    <div class="product-price">${product.price} руб.</div>
                     
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Категория</label>
-                        <select style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box;">
-                            <option value="">Выберите категорию</option>
-                            <option value="clothes">👕 Одежда</option>
-                            <option value="shoes">👟 Обувь</option>
-                            <option value="accessories">🎒 Аксессуары</option>
-                            <option value="books">📚 Книги</option>
-                        </select>
-                    </div>
+                    <button class="btn" onclick="tg.showAlert('✅ Запрос отправлен! Продавец свяжется с вами в течение 24 часов.')">
+                        💌 Связаться с продавцом
+                    </button>
                     
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Состояние вещей</label>
-                        <textarea placeholder="Опишите состояние, есть ли дефекты..." 
-                                  rows="4" 
-                                  style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box;"></textarea>
-                    </div>
-                    
-                    <button class="btn" onclick="tg.showAlert('Спасибо! Мы свяжемся с вами для оценки вещей в течение 24 часов.')">
-                        ✅ Отправить на оценку
+                    <button class="btn btn-secondary" onclick="tg.showAlert('❤️ Добавлено в избранное!')">
+                        ❤️ В избранное
                     </button>
                 </div>
             `;
-            
-            currentView = 'donate';
         }
-        
+
+        function showSellForm() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <button class="back-btn" onclick="showMainScreen()">
+                    ← Назад
+                </button>
+
+                <div class="header">
+                    <h1>📦 Продать вещь</h1>
+                    <p>Заполните форму для размещения</p>
+                </div>
+
+                <div class="filter-section">
+                    <div class="filter-title">📸 Сделайте фото вещи</div>
+                    <p style="margin-bottom: 15px; opacity: 0.9;">
+                        • На светлом фоне<br>
+                        • При хорошем освещении<br>
+                        • Покажите детали и бирки<br>
+                        • 3-5 фото разных ракурсов
+                    </p>
+                    <button class="btn" onclick="tg.showAlert('📸 Функция загрузки фото будет добавлена скоро!')">
+                        📷 Загрузить фото
+                    </button>
+                </div>
+
+                <div class="filter-section">
+                    <div class="filter-title">🎯 Выберите категорию</div>
+                    <div class="filter-options">
+                        ${categories.map(cat => `
+                            <button class="filter-btn">${cat.icon} ${cat.name}</button>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <div class="filter-title">💵 Укажите цену</div>
+                    <input type="number" placeholder="Цена в рублях" 
+                           style="width: 100%; padding: 15px; border: none; border-radius: 10px; 
+                                  background: rgba(255,255,255,0.2); color: white; font-size: 16px;"
+                           onfocus="this.style.background='rgba(255,255,255,0.3)'"
+                           onblur="this.style.background='rgba(255,255,255,0.2)'">
+                </div>
+
+                <button class="btn" onclick="tg.showAlert('🎉 Товар размещен! Ожидайте покупателей.')">
+                    ✅ Разместить объявление
+                </button>
+            `;
+        }
+
+        function showHowItWorks() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <button class="back-btn" onclick="showMainScreen()">
+                    ← Назад
+                </button>
+
+                <div class="header">
+                    <h1>❓ Как это работает</h1>
+                </div>
+
+                <div class="filter-section">
+                    <h3>🛍️ Для покупателей:</h3>
+                    <p>1. Выбираете категорию и фильтры<br>
+                    2. Находите понравившуюся вещь<br>
+                    3. Нажимаете "Хочу купить"<br>
+                    4. Продавец связывается с вами</p>
+                </div>
+
+                <div class="filter-section">
+                    <h3>📦 Для продавцов:</h3>
+                    <p>1. Делаете качественные фото<br>
+                    2. Заполняете параметры вещи<br>
+                    3. Устанавливаете цену<br>
+                    4. Получаете уведомления о покупках</p>
+                </div>
+
+                <div class="filter-section">
+                    <h3>💫 Преимущества:</h3>
+                    <p>• Сообщество танцоров<br>
+                    • Качественные вещи<br>
+                    • Безопасные сделки<br>
+                    • Поддержка 24/7</p>
+                </div>
+            `;
+        }
+
         // ==================== ЗАПУСК ====================
-        
-        // Когда страница загрузилась
         document.addEventListener('DOMContentLoaded', function() {
-            // Расширяем Mini App на весь экран
+            const tg = window.Telegram.WebApp;
             tg.expand();
+            tg.enableClosingConfirmation();
             
-            // Показываем главный экран
             showMainScreen();
-            
-            // Можно получить данные о пользователе
-            const user = tg.initDataUnsafe.user;
-            if (user) {
-                console.log('Пользователь:', user.first_name, user.last_name);
-            }
         });
+
+        // Вспомогательные функции
+        function selectSize(size) {
+            tg.showAlert(`Выбран размер: ${size}`);
+        }
+
+        function selectGender(gender) {
+            tg.showAlert(`Выбран пол: ${gender}`);
+        }
     </script>
 </body>
 </html>
