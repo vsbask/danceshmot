@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecondHand Shop</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #ffffff;
+            color: #222222;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header {
+            background: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .category-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .category-card h3 {
+            margin: 10px 0 0 0;
+            font-size: 16px;
+        }
+        
+        .btn {
+            background: #40a7e3;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #2b8ac6;
+        }
+        
+        .back-btn {
+            background: #6c757d;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Здесь будет меняться контент -->
+    </div>
+
+    <script>
+        // ==================== НАСТРОЙКИ ====================
+        const tg = window.Telegram.WebApp;
+        let currentView = 'main';
+        
+        // Данные категорий
+        const categories = [
+            { id: 'clothes', name: '👕 Одежда', icon: '👕' },
+            { id: 'shoes', name: '👟 Обувь', icon: '👟' },
+            { id: 'accessories', name: '🎒 Аксессуары', icon: '🎒' },
+            { id: 'books', name: '📚 Книги', icon: '📚' }
+        ];
+        
+        // ==================== ФУНКЦИИ ====================
+        
+        // Показываем главный экран
+        function showMainScreen() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="header">
+                    <h1>🔄 SecondHand Shop</h1>
+                    <p>Найдите уникальные вещи по выгодным ценам!</p>
+                </div>
+                
+                <div class="category-grid">
+                    ${categories.map(cat => `
+                        <div class="category-card" onclick="showCategory('${cat.id}')">
+                            <div style="font-size: 40px;">${cat.icon}</div>
+                            <h3>${cat.name}</h3>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <button class="btn" onclick="showDonateForm()">
+                    📦 Отдать вещи в магазин
+                </button>
+                
+                <button class="btn" onclick="tg.showAlert('Напишите нам в @secondhand_support')">
+                    ❓ Помощь и поддержка
+                </button>
+            `;
+            
+            currentView = 'main';
+        }
+        
+        // Показываем категорию
+        function showCategory(categoryId) {
+            const category = categories.find(cat => cat.id === categoryId);
+            
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <button class="btn back-btn" onclick="showMainScreen()">
+                    ← Назад
+                </button>
+                
+                <h2>${category.icon} ${category.name}</h2>
+                <p>Выберите товар из категории</p>
+                
+                <div style="background: #e9f7ff; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h3>Джинсовая куртка</h3>
+                    <p>Размер: M | Цвет: Синий</p>
+                    <p>Состояние: Отличное</p>
+                    <p><strong>1500 руб.</strong></p>
+                    <button class="btn" onclick="tg.showAlert('Товар добавлен в корзину!')">
+                        🛒 Добавить в корзину
+                    </button>
+                </div>
+                
+                <div style="background: #fff0e6; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h3>Кожаная сумка</h3>
+                    <p>Размер: Универсальный | Цвет: Коричневый</p>
+                    <p>Состояние: Хорошее</p>
+                    <p><strong>2000 руб.</strong></p>
+                    <button class="btn" onclick="tg.showAlert('Товар добавлен в корзину!')">
+                        🛒 Добавить в корзину
+                    </button>
+                </div>
+            `;
+            
+            currentView = 'category';
+        }
+        
+        // Форма для сдачи вещей
+        function showDonateForm() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <button class="btn back-btn" onclick="showMainScreen()">
+                    ← Назад
+                </button>
+                
+                <h2>📦 Сдать вещи</h2>
+                <p>Заполните форму для оценки ваших вещей</p>
+                
+                <div style="text-align: left; margin: 20px 0;">
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Что вы хотите сдать?</label>
+                        <input type="text" placeholder="Например: Джинсы, куртка, книги..." 
+                               style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box;">
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Категория</label>
+                        <select style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box;">
+                            <option value="">Выберите категорию</option>
+                            <option value="clothes">👕 Одежда</option>
+                            <option value="shoes">👟 Обувь</option>
+                            <option value="accessories">🎒 Аксессуары</option>
+                            <option value="books">📚 Книги</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Состояние вещей</label>
+                        <textarea placeholder="Опишите состояние, есть ли дефекты..." 
+                                  rows="4" 
+                                  style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box;"></textarea>
+                    </div>
+                    
+                    <button class="btn" onclick="tg.showAlert('Спасибо! Мы свяжемся с вами для оценки вещей в течение 24 часов.')">
+                        ✅ Отправить на оценку
+                    </button>
+                </div>
+            `;
+            
+            currentView = 'donate';
+        }
+        
+        // ==================== ЗАПУСК ====================
+        
+        // Когда страница загрузилась
+        document.addEventListener('DOMContentLoaded', function() {
+            // Расширяем Mini App на весь экран
+            tg.expand();
+            
+            // Показываем главный экран
+            showMainScreen();
+            
+            // Можно получить данные о пользователе
+            const user = tg.initDataUnsafe.user;
+            if (user) {
+                console.log('Пользователь:', user.first_name, user.last_name);
+            }
+        });
+    </script>
+</body>
+</html>
