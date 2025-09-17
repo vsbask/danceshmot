@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -231,6 +230,9 @@
     </div>
 
     <script>
+        // Глобальная переменная для Telegram WebApp
+        let tg;
+
         // ==================== ДАННЫЕ ====================
         const categories = [
             { id: 'clothes', name: '👕 Одежда', icon: '👕', color: '#FF6B6B' },
@@ -264,10 +266,6 @@
                 image: 'https://placehold.co/300x400/4ECDC4/white?text=Танцевальные+туфли'
             }
         ];
-
-        // Глобальные переменные для фильтров
-        let selectedSize = '';
-        let selectedGender = '';
 
         // ==================== ФУНКЦИИ ====================
         
@@ -304,8 +302,8 @@
             const app = document.getElementById('app');
             app.innerHTML = `
                 <div class="header">
-                    <h1>🎯 Выберите категорию</h1>
-                    <p>Найдите именно то, что ищете</p>
+                    <h1> Выберите категорию</h1>
+                    <p>🎯Найдите именно то, что ищете</p>
                 </div>
 
                 <div class="category-grid">
@@ -411,11 +409,11 @@
                     <p>🏷️ Категория: ${product.category}</p>
                     <div class="product-price">${product.price} руб.</div>
                     
-                    <button class="btn" onclick="alert('✅ Запрос отправлен! Продавец свяжется с вами в течение 24 часов.')">
-                       🤙 Связаться с продавцом
+                    <button class="btn" onclick="showAlert('✅ Запрос отправлен! Продавец свяжется с вами в течение 24 часов.')">
+                        🤙 Связаться с продавцом
                     </button>
                     
-                    <button class="btn btn-secondary" onclick="alert('❤️ Добавлено в избранное!')">
+                    <button class="btn btn-secondary" onclick="showAlert('❤️ Добавлено в избранное!')">
                         ❤️ В избранное
                     </button>
                 </div>
@@ -442,16 +440,16 @@
                         • Покажите детали и бирки<br>
                         • 3-5 фото разных ракурсов
                     </p>
-                    <button class="btn" onclick="alert('📸 Функция загрузки фото будет добавлена скоро!')">
+                    <button class="btn" onclick="showAlert('📸 Функция загрузки фото будет добавлена скоро!')">
                         📷 Загрузить фото
                     </button>
                 </div>
 
                 <div class="filter-section">
-                    <div class="filter-title">🎯 Выберите категорию</div>
+                    <div class="filter-title">Выберите категорию</div>
                     <div class="filter-options">
                         ${categories.map(cat => `
-                            <button class="filter-btn" onclick="alert('Категория выбрана: ${cat.name}')">${cat.icon} ${cat.name}</button>
+                            <button class="filter-btn">${cat.icon} ${cat.name}</button>
                         `).join('')}
                     </div>
                 </div>
@@ -465,7 +463,7 @@
                            onblur="this.style.background='rgba(255,255,255,0.2)'">
                 </div>
 
-                <button class="btn" onclick="alert('🎉 Товар размещен! Ожидайте покупателей.')">
+                <button class="btn" onclick="showAlert('🎉 Товар размещен! Ожидайте покупателей.')">
                     ✅ Разместить объявление
                 </button>
             `;
@@ -508,54 +506,34 @@
             `;
         }
 
+        // Универсальная функция для показа уведомлений
+        function showAlert(message) {
+            if (tg && tg.showAlert) {
+                tg.showAlert(message);
+            } else {
+                // Запасной вариант для тестирования вне Telegram
+                alert(message);
+            }
+        }
+
         // Вспомогательные функции
         function selectSize(size) {
-            selectedSize = size;
-            // Добавляем визуальную обратную связь
-            const buttons = document.querySelectorAll('.filter-btn');
-            buttons.forEach(btn => {
-                if (btn.textContent === size) {
-                    btn.classList.add('active');
-                } else if (sizes.includes(btn.textContent)) {
-                    btn.classList.remove('active');
-                }
-            });
-            console.log(`Выбран размер: ${size}`);
+            showAlert(`Выбран размер: ${size}`);
         }
 
         function selectGender(gender) {
-            selectedGender = gender;
-            // Добавляем визуальную обратную связь
-            const buttons = document.querySelectorAll('.filter-btn');
-            buttons.forEach(btn => {
-                if (btn.textContent === gender) {
-                    btn.classList.add('active');
-                } else if (genders.includes(btn.textContent)) {
-                    btn.classList.remove('active');
-                }
-            });
-            console.log(`Выбран пол: ${gender}`);
+            showAlert(`Выбран пол: ${gender}`);
         }
 
         // ==================== ЗАПУСК ====================
         document.addEventListener('DOMContentLoaded', function() {
-            // Инициализация Telegram WebApp
-            if (window.Telegram && window.Telegram.WebApp) {
-                const tg = window.Telegram.WebApp;
+            // Инициализируем Telegram WebApp
+            tg = window.Telegram.WebApp;
+            
+            // Проверяем, что мы в Telegram Mini App
+            if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
                 tg.expand();
                 tg.enableClosingConfirmation();
-                
-                // Создаем глобальный объект tg для использования в других функциях
-                window.tg = tg;
-            } else {
-                // Создаем фейковый объект tg для тестирования вне Telegram
-                window.tg = {
-                    showAlert: function(message) {
-                        alert(message);
-                    },
-                    expand: function() {},
-                    enableClosingConfirmation: function() {}
-                };
             }
             
             showMainScreen();
@@ -563,4 +541,3 @@
     </script>
 </body>
 </html>
-```
